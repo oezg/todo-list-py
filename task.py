@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -11,7 +11,7 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True)
     task = Column(String)
-    deadline = Column(Date, default=datetime.datetime.today())
+    deadline = Column(Date, default=datetime.today())
 
     def __repr__(self):
         return self.task
@@ -23,18 +23,18 @@ session = sessionmaker(bind=engine)()
 
 
 def todays_tasks():
-    print("Today {}:".format(datetime.datetime.today().strftime("%d %b")))
-    dates_tasks(datetime.datetime.today().date())
+    print("Today {}:".format(datetime.today().strftime("%d %b")))
+    dates_tasks(datetime.today().date())
 
 
-def dates_tasks(date: datetime.date):
+def dates_tasks(date):
     rows = session.query(Task).filter(Task.deadline == date).all()
     [print(f"{i}. {row}") for i, row in enumerate(rows, 1)] if rows else print("Nothing to do!")
 
 
 def weeks_tasks():
     for i in range(7):
-        consecutive_date = datetime.datetime.today().date() + datetime.timedelta(days=i)
+        consecutive_date = datetime.today().date() + timedelta(days=i)
         print(f"\n{consecutive_date.strftime('%A %d %b')}:")
         dates_tasks(consecutive_date)
 
@@ -46,13 +46,13 @@ def all_tasks():
 
 def missed_tasks():
     print('Missed tasks:')
-    rows = session.query(Task).filter(Task.deadline < datetime.datetime.today().date()).order_by(Task.deadline).all()
+    rows = session.query(Task).filter(Task.deadline < datetime.today().date()).order_by(Task.deadline).all()
     list_tasks(rows) if rows else print('All tasks have been completed!')
 
 
 def add_task():
     task = input("Enter a task\n")
-    deadline = datetime.datetime.strptime(input("Enter a deadline\n"), "%Y-%m-%d").date()
+    deadline = datetime.strptime(input("Enter a deadline\n"), "%Y-%m-%d").date()
     session.add(Task(task=task, deadline=deadline))
     session.commit()
     print("The task has been added!")
