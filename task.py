@@ -58,11 +58,6 @@ def add_task():
     print("The task has been added!")
 
 
-def list_tasks(tasks: list[Task]):
-    for i, task in enumerate(tasks, 1):
-        print(f"{i}. {task}. {task.deadline.strftime('%-d %b')}")
-
-
 def delete_task():
     rows = session.query(Task).order_by(Task.deadline).all()
     if rows:
@@ -72,6 +67,11 @@ def delete_task():
         print("The task has been deleted!")
     else:
         print("Nothing to delete")
+
+
+def list_tasks(tasks: list[Task]):
+    for i, task in enumerate(tasks, 1):
+        print(f"{i}. {task}. {task.deadline.strftime('%-d %b')}")
 
 
 options = {1: todays_tasks, 2: weeks_tasks, 3: all_tasks, 4: missed_tasks, 5: add_task, 6: delete_task}
