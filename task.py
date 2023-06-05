@@ -58,7 +58,7 @@ def add_task():
     print("The task has been added!")
 
 
-def list_tasks(tasks):
+def list_tasks(tasks: list[Task]):
     for i, task in enumerate(tasks, 1):
         print(f"{i}. {task}. {task.deadline.strftime('%-d %b')}")
 
